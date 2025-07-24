@@ -3,9 +3,16 @@ import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 
 export default function Login() {
   const supabase = createClientComponentClient()
+  const [redirectUrl, setRedirectUrl] = useState('');
+
+  useEffect(() => {
+    // This code runs only in the browser, ensuring window.location.href is available
+    setRedirectUrl(`${window.location.origin}/auth/callback`);
+  }, []);
 
   return (
     <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
@@ -30,13 +37,17 @@ export default function Login() {
         Back
       </Link>
       <div className="w-full max-w-sm mx-auto">
-        <Auth
-          supabaseClient={supabase}
-          appearance={{ theme: ThemeSupa }}
-          theme="dark"
-          socialLayout="horizontal"
-          providers={['google', 'discord']} // This line is updated
-        />
+        {/* We only render the Auth component once the redirectUrl is set */}
+        {redirectUrl && (
+          <Auth
+            supabaseClient={supabase}
+            appearance={{ theme: ThemeSupa }}
+            theme="dark"
+            socialLayout="horizontal"
+            providers={['google', 'discord']}
+            redirectTo={redirectUrl}
+          />
+        )}
       </div>
     </div>
   )
