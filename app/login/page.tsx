@@ -35,7 +35,7 @@ export default function Login() {
           appearance={{ theme: ThemeSupa }}
           theme="dark"
           socialLayout="horizontal"
-          providers={['google', 'discord']}
+          providers={[]}
         />
       </div>
     </div>
